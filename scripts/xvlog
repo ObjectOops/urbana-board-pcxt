@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -euo pipefail
+
+ARGS_FILE="/workspaces/urbana-board-pcxt/scripts/conf/xvlog_args.txt"
+OUTPUT_FILE="/workspaces/urbana-board-pcxt/scripts/conf/xvlog_output.txt"
+
+# Ensure that the output file exists.
+: > "$OUTPUT_FILE"
+
+START_MTIME=$(stat -c %Y "$OUTPUT_FILE" 2>/dev/null || echo 0)
+
+printf '%q ' "$@" > "$ARGS_FILE"
+printf '\n' >> "$ARGS_FILE"
+
+while true; do
+    current_mtime=$(stat -c %Y "$OUTPUT_FILE" 2>/dev/null || echo 0)
+
+    if [ "$current_mtime" -gt "$START_MTIME" ]; then
+        cat "$OUTPUT_FILE"
+        exit 0
+    fi
+
+    sleep 1.0
+done
