@@ -34,6 +34,7 @@ while True:
 
             result = subprocess.run(
                 [xvlog_path, *args],
+                cwd="./xilinx/urbana_board_pcxt/",
                 capture_output=True,
                 text=True,
             )

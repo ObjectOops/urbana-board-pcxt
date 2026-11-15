@@ -1,4 +1,6 @@
-xilinx/
+bd/*/*
+!bd/*/*.bd
 
 scripts/conf/
+xilinx/
 temp/

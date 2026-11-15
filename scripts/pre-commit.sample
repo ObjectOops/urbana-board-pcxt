@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# Custom pre-commit hook sample.
+
+# Redirect output to stderr.
+exec 1>&2
+
+KEYWORD_FILE="scripts/conf/blocked_keywords.txt"
+PATHS_TO_CHECK="
+tcl
+bd
+"
+
+STAGED_FILES=$(
+    git diff --cached --name-only --diff-filter=ACMR |
+    while IFS= read -r file; do
+        for path in $PATHS_TO_CHECK; do
+            case "$file" in
+                "$path"|"$path"/*)
+                    echo "$file"
+                    break
+                    ;;
+            esac
+        done
+    done
+)
+
+[ -z "$STAGED_FILES" ] && exit 0
+[ ! -f "$KEYWORD_FILE" ] && exit 0
+
+FOUND=0
+
+while IFS= read -r keyword; do
+    [ -z "$keyword" ] && continue
+
+    while IFS= read -r file; do
+        if git show ":$file" | grep -Fqi "$keyword"; then
+            if [ $FOUND -eq 0 ]; then
+                echo "Commit blocked. Blocked keywords found:"
+                FOUND=1
+            fi
+            echo "  $file (matched: $keyword)"
+        fi
+    done <<EOF
+$STAGED_FILES
+EOF
+
+done < "$KEYWORD_FILE"
+
+[ $FOUND -eq 0 ] || exit 1
+
+exit 0
