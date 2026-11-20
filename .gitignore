@@ -1,6 +1,12 @@
+martypc/
+
 bd/*/*
 !bd/*/*.bd
 
 scripts/conf/
 xilinx/
 temp/
+
+# Claude Code is used only for design assistance and debugging.
+.claude/
+CLAUDE.md
