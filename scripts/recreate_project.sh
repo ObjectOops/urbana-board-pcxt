@@ -2,10 +2,10 @@
 
 set -eu
 
-cd "./tcl"
+cd "./xilinx"
 
-PROJECT_DIR="../xilinx/urbana_board_pcxt"
-PROJECT_TCL="urbana_board_pcxt.tcl"
+PROJECT_DIR="./urbana_board_pcxt"
+PROJECT_TCL="../tcl/urbana_board_pcxt.tcl"
 
 if ! command -v vivado >/dev/null 2>&1; then
     echo "Error: vivado not found in PATH."

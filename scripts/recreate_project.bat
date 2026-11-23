@@ -1,13 +1,13 @@
 @echo off
 setlocal
 
-cd /d ".\tcl" || (
-    echo Error: Failed to change directory to: .\tcl
+cd /d ".\xilinx" || (
+    echo Error: Failed to change directory to: .\xilinx
     exit /b 1
 )
 
-set "PROJECT_DIR=..\xilinx\urbana_board_pcxt"
-set "PROJECT_TCL=urbana_board_pcxt.tcl"
+set "PROJECT_DIR=.\urbana_board_pcxt"
+set "PROJECT_TCL=..\tcl\urbana_board_pcxt.tcl"
 
 where vivado >nul 2>nul
 if errorlevel 1 (
@@ -36,6 +36,6 @@ if exist "%PROJECT_DIR%" (
     )
 )
 
-vivado -mode batch -source "%PROJECT_TCL%"
+vivado -mode batch -source "%PROJECT_TCL%" -tclargs --origin_dir "..\tcl"
 
 exit /b %ERRORLEVEL%
