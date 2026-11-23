@@ -1,10 +1,13 @@
 @echo off
 setlocal
 
-cd "\tcl"
+cd /d ".\tcl" || (
+    echo Error: Failed to change directory to: .\tcl
+    exit /b 1
+)
 
-set PROJECT_DIR=..\xilinx\urbana_board_pcxt
-set PROJECT_TCL=urbana_board_pcxt.tcl
+set "PROJECT_DIR=..\xilinx\urbana_board_pcxt"
+set "PROJECT_TCL=urbana_board_pcxt.tcl"
 
 where vivado >nul 2>nul
 if errorlevel 1 (
@@ -18,19 +21,21 @@ if not exist "%PROJECT_TCL%" (
 )
 
 if exist "%PROJECT_DIR%" (
-    choice /c yn /m "Project directory exists. Delete and recreate? [y/N]"
-    if errorlevel 2 goto :no
-    if errorlevel 1 goto :yes
+    choice /c YN /m "Project directory exists. Delete and recreate?"
 
-    :yes
+    if errorlevel 2 (
+        echo Cancelled.
+        exit /b 0
+    )
+
     rmdir /s /q "%PROJECT_DIR%"
-    goto :end
 
-    :no
-    echo Cancelled.
-    goto :end
-
-    :end
+    if exist "%PROJECT_DIR%" (
+        echo Error: Failed to delete project directory.
+        exit /b 1
+    )
 )
 
 vivado -mode batch -source "%PROJECT_TCL%"
+
+exit /b %ERRORLEVEL%
