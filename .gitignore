@@ -1,9 +1,18 @@
-martypc/
-
 bd/*/*
+
+!bd/*/ip/
+bd/*/ip/*/*
+!bd/*/ip/*/*.xci
+
+!bd/*/hdl/
+
 !bd/*/*.bd
 
+ip/*/*
+!ip/*/*.xci
+
 scripts/conf/
+reference/
 xilinx/
 temp/
 
